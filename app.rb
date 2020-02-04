@@ -22,16 +22,17 @@ class HangpersonApp < Sinatra::Base
     session[:game] = @game
   end
   
-  # These two routes are good examples of Sinatra syntax
-  # to help you with the rest of the assignment
+  # default uri, redirects to new
   get '/' do
     redirect '/new'
   end
   
+  # displays page with button to start a new game
   get '/new' do
     erb :new
   end
   
+  # creates a new game by generating a random word and passing it into the game
   post '/create' do
     # NOTE: don't change next line - it's needed by autograder!
     word = params[:word] || HangpersonGame.get_random_word
@@ -41,6 +42,7 @@ class HangpersonApp < Sinatra::Base
     redirect '/show'
   end
   
+  # processes a player's guess
   post '/guess' do
     # params is a hash containing inputs from the page
     letter = params[:guess].to_s[0]
@@ -54,11 +56,9 @@ class HangpersonApp < Sinatra::Base
     redirect '/show'
   end
   
-  # Everytime a guess is made, we should eventually end up at this route.
-  # Use existing methods in HangpersonGame to check if player has
-  # won, lost, or neither, and take the appropriate action.
-  # Notice that the show.erb template expects to use the instance variables
-  # wrong_guesses and word_with_guesses from @game.
+  # displays page with status for game
+  # also has form to allow player to guess
+  # redirects if player wins or loses
   get '/show' do
     case @game.check_win_or_lose
     when :win
@@ -69,6 +69,8 @@ class HangpersonApp < Sinatra::Base
     erb :show
   end
   
+  # displays page for winning
+  # redirects to show if player tries to cheat by altering uri
   get '/win' do
     if @game.check_win_or_lose == :win
       flash[:message] = "You Win!"
@@ -78,6 +80,8 @@ class HangpersonApp < Sinatra::Base
     end
   end
   
+  # displays page for losing
+  # redirects to show if player tries to cheat by altering uri
   get '/lose' do
     if @game.check_win_or_lose == :lose
       flash[:message] = "Sorry, you lose!"
