@@ -1,10 +1,17 @@
+# app server for hangman
+# erb :<action> will execute code in the file views/<action>
+
 require 'sinatra/base'
 require 'sinatra/flash'
 require './lib/hangperson_game.rb'
 
 class HangpersonApp < Sinatra::Base
-
+  # enables use of the hash "session"
+  # session is basically the cookies; anything in this hash is preserved across requests
   enable :sessions
+
+  # enables use of the hash "flash"
+  # used for remembering short messages that persist until the very next request, and then are erased
   register Sinatra::Flash
   
   before do
